@@ -11,7 +11,7 @@ const Card=({title}
 
    return(
     <div className="card" onClick={()=> setcount((prevState)=>prevState+1)}>
-      <h2>{title}</h2>
+      <h2>{title}-{count}</h2>
       <button onClick={() => sethasLiked((prevState)=>!prevState)}>
        {hasLiked? '❤️': '🤍'}   
       </button>
