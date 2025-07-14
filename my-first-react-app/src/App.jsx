@@ -11,7 +11,7 @@ const API_OPTION = {
   method: 'GET',
   headers: {
     accept: 'application/json',
-    Authorization: `Bearer ${API_KEY}`
+    Authorization: `Bearer ${API_KEY}` // Remove extra space after Bearer
   }
 }
 
@@ -20,28 +20,32 @@ const API_OPTION = {
 const App = () => {
 
   const [searchTerm, setsearchTerm] = useState("")
-  const [errorMessage, setErrorMessage] = useState([])
-
+  const [errorMessage, setErrorMessage] = useState("")
+  const [movieList, setmovieList] = useState([])
+  const [isLoading, setisLoading] = useState(false);
 
 
   const fetchMovies = async () => {
+    setisLoading(true);
+    setErrorMessage("");
     try {
       const endpoint = `${API_BASE_URL}/discover/movie?sort_by=popularity.desc`;
-
       const response = await fetch(endpoint, API_OPTION);
-       if(!response.ok){  
-        throw new Error('Failed to fetch movies')}
-      
-        const data = await response.json();
-        console.log(data);
-    }
-
-
-
-
-    catch (error) {
-         console.error(`Error fetching movies: ${error} `);
-      setErrorMessage('Error fetching movies. Please try again later.')
+      if (!response.ok) {
+        throw new Error('Failed to fetch movies');
+      }
+      const data = await response.json();
+      if (data.response === 'false') {
+        setErrorMessage(data.Error || 'Failed to fetch movies');
+        setmovieList([]);
+        return;
+      }
+      setmovieList(data.results || []);
+    } catch (error) {
+      console.error(`Error fetching movies: ${error}`);
+      setErrorMessage('Error fetching movies. Please try again later.');
+    } finally {
+      setisLoading(false);
     }
   }
 
@@ -66,7 +70,16 @@ const App = () => {
         <section className='all-movies'>
           <h2>All Movies</h2>
 
-          {errorMessage && <p className="text-red-500"> {errorMessage} </p>}
+          {isLoading ?
+            (<p className='text-white'>Loading...</p>) :
+            errorMessage ? (<p className="text-red-500">{errorMessage}</p>) :
+              <ul>
+                {movieList.map((movie) => (
+                  <p key={movie.id} className='text-white'>{movie.title} </p>
+                ))}
+              </ul>
+
+          }
 
         </section>
       </div>
