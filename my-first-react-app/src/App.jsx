@@ -3,7 +3,7 @@ import Search from './components/search'
 import Spinner from './components/Spinner';
 import Moviecard from './components/Moviecard';
 import { useDebounce } from 'react-use';
-import { getTrendingMovies, upadateSearchCount } from './appwrite';
+import { getTrendingMovies, updateSearchCount } from './appwrite';
 
 
 
@@ -23,24 +23,24 @@ const API_OPTION = {
 
 const App = () => {
 
-  const [searchTerm, setsearchTerm] = useState("")
+  const [searchTerm, setSearchTerm] = useState("")
   const [errorMessage, setErrorMessage] = useState("")
-  const [movieList, setmovieList] = useState([])
+  const [movieList, setMovieList] = useState([])
   const [trendingMovies, setTrendingMovies] = useState([]);
-  const [isLoading, setisLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
-  
+
   useDebounce(() =>
     setDebouncedSearchTerm(searchTerm), 500, [searchTerm]);
 
   const fetchMovies = async (query = '') => {
-    setisLoading(true);
+    setIsLoading(true);
     setErrorMessage("");
     try {
-      const endpoint = query? 
-      `${API_BASE_URL}/search/movie?query=${encodeURIComponent(query)}` :
-      `${API_BASE_URL}/discover/movie?sort_by=popularity.desc`;
-       
+      const endpoint = query ?
+        `${API_BASE_URL}/search/movie?query=${encodeURIComponent(query)}` :
+        `${API_BASE_URL}/discover/movie?sort_by=popularity.desc`;
+
       const response = await fetch(endpoint, API_OPTION);
       if (!response.ok) {
         throw new Error('Failed to fetch movies');
@@ -48,51 +48,45 @@ const App = () => {
       const data = await response.json();
       if (data.response === 'false') {
         setErrorMessage(data.Error || 'Failed to fetch movies');
-        setmovieList([]);
+        setMovieList([]);
         return;
       }
-      setmovieList(data.results || []);
 
-       if (query && data.results.length > 0) {
-      
-        await upadateSearchCount(query, data.results[0]
+      setMovieList(data.results || []);
 
+      if (query && data.results.length > 0) {
+        await updateSearchCount(query, data.results[0]
         )
       }
-
 
     } catch (error) {
       console.error(`Error fetching movies: ${error}`);
       setErrorMessage('Error fetching movies. Please try again later.');
     } finally {
-      setisLoading(false)
+      setIsLoading(false)
         ;
     }
   }
 
-   const loadtrendingMovies = async () => {
-    
-    try{
-      const movies = await getTrendingMovies()
+  const loadtrendingMovies = async () => {
 
+    try {
+      const movies = await getTrendingMovies()
       setTrendingMovies(movies);
     }
 
-    catch (erroe){
+    catch (error) {
       console.error(`Error fetching trending movies: ${error}`);
-      
     }
-
-
-   }
+  }
 
   useEffect(() => {
     fetchMovies(debouncedSearchTerm);
   }, [debouncedSearchTerm]);
 
-  useEffect(()=>{
+  useEffect(() => {
     loadtrendingMovies();
-  },[])
+  }, [])
 
   return (
     <main>
@@ -103,26 +97,26 @@ const App = () => {
           <img src="./hero.png.png" alt="Hero banner" />
           <h1>Find <span className='text-gradient'>Movies</span> You'll Enjoy Without The Hussle</h1>
 
-          <Search setsearchTerm={setsearchTerm} />
+          <Search setSearchTerm={setSearchTerm} />
         </header>
 
-       {trendingMovies.length > 0 && (
-        <section className='trending'>
-          <h2>Trending Movies</h2>
+        {trendingMovies.length > 0 && (
+          <section className='trending'>
+            <h2>Trending Movies</h2>
 
-          <ul>
-            
-            {trendingMovies.map((movie, index) => (
-              <li key={movie.$id}>
-                <p>{index + 1}</p>
-                <img src={movie.poster_url} alt={movie.title} />
+            <ul>
 
+              {trendingMovies.map((movie, index) => (
+                <li key={movie.$id}>
+                  <p>{index + 1}</p>
+                  <img src={movie.poster_url} alt={movie.title} />
+                </li>)
+              )
+              }
+            </ul>
+          </section>
 
-              </li>))}
-          </ul>
-        </section>
-
-       )}
+        )}
 
         <section className='all-movies'>
           <h2 >All Movies</h2>
@@ -136,10 +130,11 @@ const App = () => {
               {movieList.map((movie) => (
                 <Moviecard key={movie.id} movie={movie} />
               ))}
+             
             </ul>
           )
           }
-
+         
         </section>
       </div>
     </main>

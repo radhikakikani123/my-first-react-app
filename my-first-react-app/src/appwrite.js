@@ -10,7 +10,7 @@ const client = new Client()
 const database = new Databases(client);
 
 
-export const upadateSearchCount = async (searchTerm, movie) => {
+export const updateSearchCount = async (searchTerm, movie) => {
 
     // use appwrite SDK to check of the searchterm already exists in the database
     try {
