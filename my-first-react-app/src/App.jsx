@@ -1,11 +1,12 @@
-import React, { useEffect, useState } from 'react'
-import Search from './components/search'
+import  { useEffect, useState } from 'react'
+import Search from './components/Search'
 import Spinner from './components/Spinner';
 import Moviecard from './components/Moviecard';
 import { useDebounce } from 'react-use';
 import { getTrendingMovies, updateSearchCount } from './appwrite';
 
-
+// Ensure you have the correct API base URL and API key
+// The API key should not have a space after 'Bearer'
 
 const API_BASE_URL = 'https://api.themoviedb.org/3';
 
@@ -21,7 +22,7 @@ const API_OPTION = {
 
 
 
-const App = () => {
+ const App = () => {
 
   const [searchTerm, setSearchTerm] = useState("")
   const [errorMessage, setErrorMessage] = useState("")
@@ -68,7 +69,7 @@ const App = () => {
     }
   }
 
-  const loadtrendingMovies = async () => {
+  const loadTrendingMovies = async () => {
 
     try {
       const movies = await getTrendingMovies()
@@ -84,8 +85,8 @@ const App = () => {
     fetchMovies(debouncedSearchTerm);
   }, [debouncedSearchTerm]);
 
-  useEffect(() => {
-    loadtrendingMovies();
+   useEffect(() => {
+    loadTrendingMovies();
   }, [])
 
   return (
@@ -100,7 +101,7 @@ const App = () => {
           <Search setSearchTerm={setSearchTerm} />
         </header>
 
-        {trendingMovies.length > 0 && (
+        {!debouncedSearchTerm && trendingMovies.length > 0 && (
           <section className='trending'>
             <h2>Trending Movies</h2>
 
@@ -109,7 +110,7 @@ const App = () => {
               {trendingMovies.map((movie, index) => (
                 <li key={movie.$id}>
                   <p>{index + 1}</p>
-                  <img src={movie.poster_url} alt={movie.title} />
+                      <img src={movie.poster_url} alt={movie.title}/>
                 </li>)
               )
               }
