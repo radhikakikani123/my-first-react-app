@@ -52,7 +52,12 @@ const App = () => {
       }
       setmovieList(data.results || []);
 
-       upadateSearchCount();
+       if (query && data.results.length > 0) {
+      
+        await upadateSearchCount(query, data.results[0]
+          
+        )
+      }
 
 
     } catch (error) {
