@@ -1,7 +1,7 @@
 import  { useEffect, useState } from 'react'
 import Search from './components/Search'
 import Spinner from './components/Spinner';
-import Moviecard from './components/Moviecard';
+import MovieCard from './components/MovieCard';
 import { useDebounce } from 'react-use';
 import { getTrendingMovies, updateSearchCount } from './appwrite';
 
@@ -129,7 +129,7 @@ const API_OPTION = {
           ) : (
             <ul>
               {movieList.map((movie) => (
-                <Moviecard key={movie.id} movie={movie} />
+                <MovieCard key={movie.id} movie={movie} />
               ))}
              
             </ul>
