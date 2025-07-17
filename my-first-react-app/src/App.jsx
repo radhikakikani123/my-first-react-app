@@ -101,7 +101,7 @@ const API_OPTION = {
           <Search setSearchTerm={setSearchTerm} />
         </header>
 
-        {!debouncedSearchTerm && trendingMovies.length > 0 && (
+        {!debouncedSearchTerm &&  trendingMovies.length > 0 && (
           <section className='trending'>
             <h2>Trending Movies</h2>
 
