@@ -1,4 +1,4 @@
-import  { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import Search from './components/Search'
 import Spinner from './components/Spinner';
 import MovieCard from './components/MovieCard';
@@ -22,7 +22,7 @@ const API_OPTION = {
 
 
 
- const App = () => {
+const App = () => {
 
   const [searchTerm, setSearchTerm] = useState("")
   const [errorMessage, setErrorMessage] = useState("")
@@ -59,14 +59,14 @@ const API_OPTION = {
         await updateSearchCount(query, data.results[0]
         )
       }
+    }
 
-    } catch (error) {
+    catch (error) {
       console.error(`Error fetching movies: ${error}`);
       setErrorMessage('Error fetching movies. Please try again later.');
     } finally {
-      setIsLoading(false)
-        ;
-    }
+      setIsLoading(false);
+     }
   }
 
   const loadTrendingMovies = async () => {
@@ -85,7 +85,7 @@ const API_OPTION = {
     fetchMovies(debouncedSearchTerm);
   }, [debouncedSearchTerm]);
 
-   useEffect(() => {
+  useEffect(() => {
     loadTrendingMovies();
   }, [])
 
@@ -101,7 +101,7 @@ const API_OPTION = {
           <Search setSearchTerm={setSearchTerm} />
         </header>
 
-        {!debouncedSearchTerm &&  trendingMovies.length > 0 && (
+        {!debouncedSearchTerm && trendingMovies.length > 0 && (
           <section className='trending'>
             <h2>Trending Movies</h2>
 
@@ -110,7 +110,7 @@ const API_OPTION = {
               {trendingMovies.map((movie, index) => (
                 <li key={movie.$id}>
                   <p>{index + 1}</p>
-                      <img src={movie.poster_url} alt={movie.title}/>
+                  <img src={movie.poster_url} alt={movie.title} />
                 </li>)
               )
               }
@@ -131,11 +131,11 @@ const API_OPTION = {
               {movieList.map((movie) => (
                 <MovieCard key={movie.id} movie={movie} />
               ))}
-             
+
             </ul>
           )
           }
-         
+
         </section>
       </div>
     </main>
