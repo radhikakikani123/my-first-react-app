@@ -59,3 +59,20 @@ export const getTrendingMovies = async () => {
         console.error(error)
     }
 }
+
+
+export const getMovieDetails = async (movieId) => {
+    try {
+        const result = await database.listDocuments(DATABASE_ID, COLLECTION_ID, [
+            Query.equal('movie_id', movieId)
+        ]);
+        
+        if (result.documents.length > 0) {
+            return result.documents[0];
+        }
+        return null;
+    } catch (error) {
+        console.error('Error fetching movie details:', error);
+        return null;
+    }
+};
