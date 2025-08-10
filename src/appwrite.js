@@ -32,16 +32,20 @@ export const updateSearchCount = async (searchTerm, movie) => {
         else {
             await database.createDocument (DATABASE_ID, COLLECTION_ID, ID.unique(), {
                 searchTerm,
-                count: 1,
+                count:1,
                 movie_id: movie.id,
+                title: movie.title,
+                overview: movie.overview,
+                release_date: movie.release_date,
+                vote_average: movie.vote_average,
                 poster_url: `https://image.tmdb.org/t/p/w500${movie.poster_path}`,
-            }); 
+                backdrop_url: movie.backdrop_path ? `https://image.tmdb.org/t/p/original${movie.backdrop_path}` : null,
+            });
         }
+    } catch (error) {
+        console.error('Error updating search count:', error);
     }
-    catch (error) {
-        console.error(error)
-    }
-}
+};
 
 export const getTrendingMovies = async () => {
     try {
